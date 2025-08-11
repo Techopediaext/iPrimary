@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPrimary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f4f4f4;
+        }
+        header {
+			background: #4CAF50;
+			color: white;
+			padding: 1rem;
+			text-align: center;
+			position: relative; /* allows absolute positioning inside */
+		}
+
+		header .logo {
+			position: absolute;
+			top: 50%;
+			right: 1rem;
+			transform: translateY(-50%);
+			height: 40px; /* adjust size */
+		}
+
+        main {
+            flex: 1;
+            padding: 1rem;
+        }
+        form {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+		.dropdown-row {
+    display: flex;
+    gap: 1rem; /* space between dropdowns */
+    flex-wrap: wrap; /* so they stack on small screens */
+}
+
+.form-group {
+    flex: 1; /* both take equal width */
+    min-width: 150px; /* prevent too small on tiny screens */
+}
+        label {
+            display: block;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .doc-container {
+            display: none; /* hidden until doc loads */
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+        iframe {
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            border: 1px solid #ccc;
+            background: white;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pearson Edexcel iPrimary(Topic Wise)</h1>
+		<img src="MAZLogo.png" alt="Logo" class="logo">
+    </header>
+
+    <main>
+        <form id="searchForm">
+			<div class="dropdown-row">
+			<div class="form-group">
+            <label for="category">Select Subject</label>
+            <select id="category" name="category" required>
+                <option value="">--Select Subject--</option>
+                <option value="science">Science</option>
+                <option value="math">Math</option>
+                <option value="history">English</option>
+            </select>
+		</div>
+		<div class="form-group">
+            <label for="document">Choose Topic</label>
+            <select id="document" name="document" required>
+                <option value="">--Select Topic--</option>
+            </select>
+ </div>
+    </div>
+            <button type="submit">View Past Paper Questions</button>
+        </form>
+
+        <div id="docSection" class="doc-container">
+            <iframe id="googleDoc" src="" frameborder="0"></iframe>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 MAZ International</p>
+    </footer>
+
+    <script>
+        const categoryDropdown = document.getElementById("category");
+        const documentDropdown = document.getElementById("document");
+        const docSection = document.getElementById("docSection");
+        const googleDocFrame = document.getElementById("googleDoc");
+
+        // Predefined docs per category
+        const documents = {
+			science: [
+				{ name: "Feeding Relationships", keyword: "feeding_relationships" },
+				{ name: "Variation and Classification", keyword: "variation_classification" },
+				{ name: "Growing Plants", keyword: "growing_plants" },
+				{ name: "Plant Adaptations", keyword: "plant_adaptations" },
+				{ name: "Micro Organisms", keyword: "micro_organisms" },
+				{ name: "Plant Life Cycles", keyword: "plant_life_cycles" },
+				{ name: "Heart, Lungs and Circulation", keyword: "heart_lungs_circulation" },
+				{ name: "Solids, Liquids and Gases", keyword: "solids_liquids_gases" },
+				{ name: "Mixing and Separating Materials", keyword: "mixing_separating" },
+				{ name: "Reversible and Irreversible Changes", keyword: "reversible_irreversible_changes" },
+				{ name: "Light", keyword: "light" },
+				{ name: "Electricity: Everyday Uses and Simple Circuits", keyword: "electricity_simple_circuits" },
+				{ name: "Seeing and Reflecting", keyword: "seeing_reflecting" },
+				{ name: "Electricity: Changing Circuits", keyword: "electricity_changing_circuits" },
+				{ name: "Earth and Space", keyword: "earth_space" },
+				{ name: "Forces in Air and Water", keyword: "forces_air_water" },
+				{ name: "Scientific Ideas", keyword: "scientific_ideas" },
+				{ name: "Investigating", keyword: "investigating" },
+				{ name: "Obtaining and Presenting Evidence", keyword: "obtaining_presenting_evidence" },
+				{ name: "Drawing Conclusions", keyword: "drawing_conclusions" },
+				{ name: "Evaluating Investigations", keyword: "evaluating_investigations" }
+			],
+            math: [
+                { name: "Algebra Guide", keyword: "algebra" },
+                { name: "Geometry Notes", keyword: "geometry" },
+                { name: "Calculus Intro", keyword: "calculus" }
+            ],
+            history: [
+                { name: "Ancient Civilizations", keyword: "ancient" },
+                { name: "World War II", keyword: "ww2" },
+                { name: "Modern History", keyword: "modern" }
+            ]
+        };
+
+        // Map keywords to Google Doc URLs
+        const docLinks = {
+            micro_organisms: "https://docs.google.com/document/d/e/2PACX-1vRcTrmBkvvRnVTYvwGzQnD3wSdPJpVyWwk94LixllVYX8l9JRXwdLgm0WUaSgN9TXFHIK6RAfiInU0v/pub?embedded=true",
+            chemistry: "https://docs.google.com/document/d/YOUR_DOC_ID_2/pub?embedded=true",
+            biology: "https://docs.google.com/document/d/YOUR_DOC_ID_3/pub?embedded=true",
+            algebra: "https://docs.google.com/document/d/YOUR_DOC_ID_4/pub?embedded=true",
+            geometry: "https://docs.google.com/document/d/YOUR_DOC_ID_5/pub?embedded=true",
+            calculus: "https://docs.google.com/document/d/YOUR_DOC_ID_6/pub?embedded=true",
+            ancient: "https://docs.google.com/document/d/YOUR_DOC_ID_7/pub?embedded=true",
+            ww2: "https://docs.google.com/document/d/YOUR_DOC_ID_8/pub?embedded=true",
+            modern: "https://docs.google.com/document/d/YOUR_DOC_ID_9/pub?embedded=true"
+        };
+
+        // Populate second dropdown
+        categoryDropdown.addEventListener("change", function () {
+            const category = this.value;
+            documentDropdown.innerHTML = '<option value="">--Select Document--</option>';
+            if (documents[category]) {
+                documents[category].forEach(doc => {
+                    const option = document.createElement("option");
+                    option.value = doc.keyword;
+                    option.textContent = doc.name;
+                    documentDropdown.appendChild(option);
+                });
+            }
+        });
+
+        // On form submit, load doc
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const keyword = documentDropdown.value;
+            if (keyword && docLinks[keyword]) {
+                googleDocFrame.src = docLinks[keyword];
+                docSection.style.display = "flex"; // Show doc
+                docSection.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    </script>
+</body>
+</html>
